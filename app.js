@@ -3,8 +3,72 @@
    =========================== */
 
 // =====================
-// Particle System
+// Auto Time-Based Theme
 // =====================
+
+const DAY_START = 6;   // 06:00 → light
+const DAY_END   = 18;  // 18:00 → dark
+
+function getAutoTheme() {
+  const h = new Date().getHours();
+  return (h >= DAY_START && h < DAY_END) ? 'light' : 'dark';
+}
+
+function applyTheme(theme) {
+  if (theme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+  }
+}
+
+// Apply immediately to avoid flash
+(function () {
+  applyTheme(getAutoTheme());
+})();
+
+// =====================
+// Real-Time Clock
+// =====================
+
+function getPeriodInfo(hour) {
+  if (hour >= 0  && hour < 6)  return { emoji: '🌃', label: 'Dini Hari', cls: 'dinihari' };
+  if (hour >= 6  && hour < 12) return { emoji: '🌅', label: 'Pagi',      cls: 'pagi'    };
+  if (hour >= 12 && hour < 15) return { emoji: '☀️',  label: 'Siang',     cls: 'siang'   };
+  if (hour >= 15 && hour < 18) return { emoji: '🌇', label: 'Sore',      cls: 'sore'    };
+  return                               { emoji: '🌙', label: 'Malam',     cls: 'malam'   };
+}
+
+function updateClock() {
+  const now    = new Date();
+  const h      = String(now.getHours()).padStart(2, '0');
+  const m      = String(now.getMinutes()).padStart(2, '0');
+  const info   = getPeriodInfo(now.getHours());
+
+  const timeEl   = document.getElementById('clockTime');
+  const periodEl = document.getElementById('clockPeriod');
+
+  if (timeEl)   timeEl.innerHTML  = `${h}<span class="colon">:</span>${m}`;
+  if (periodEl) {
+    periodEl.innerHTML  = `${info.emoji} ${info.label}`;
+    periodEl.className  = `clock-period ${info.cls}`;
+  }
+
+  // Auto-switch theme at boundary hours (6:00 and 18:00)
+  const newTheme = getAutoTheme();
+  const curTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  if (newTheme !== curTheme) {
+    applyTheme(newTheme);
+    if (newTheme === 'dark') createStarfield();
+    updateParticleColors();
+  }
+}
+
+function setupClock() {
+  updateClock();
+  setInterval(updateClock, 1000);
+}
+
 
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
@@ -55,11 +119,85 @@ function drawParticles() {
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
     // Alternate between soft pink and soft blue to match mbdx.store palette
-    const color = i % 2 === 0 ? `rgba(232, 96, 122, ${p.opacity})` : `rgba(107, 189, 217, ${p.opacity})`;
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const color = isDark
+      ? (i % 2 === 0 ? `rgba(168, 85, 247, ${p.opacity})` : `rgba(6, 182, 212, ${p.opacity})`)
+      : (i % 2 === 0 ? `rgba(232, 96, 122, ${p.opacity})` : `rgba(107, 189, 217, ${p.opacity})`);
     ctx.fillStyle = color;
     ctx.fill();
   });
   animFrame = requestAnimationFrame(drawParticles);
+}
+
+// =====================
+// Update Particle Colors
+// =====================
+
+function updateParticleColors() {
+  // Colors update automatically on next frame via isDark check in drawParticles
+}
+
+// =====================
+// Starfield
+// =====================
+
+function createStarfield() {
+  const container = document.getElementById('starfield');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  const totalStars = 180;
+
+  // Star types: weight distribution
+  const types = [
+    { cls: 'star star-sm',   count: 90 },
+    { cls: 'star star-md',   count: 55 },
+    { cls: 'star star-lg',   count: 20 },
+    { cls: 'star star-glow', count: 8  },
+    { cls: 'star star-cyan', count: 7  },
+  ];
+
+  types.forEach(({ cls, count }) => {
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('span');
+      el.className = cls;
+      const x = Math.random() * 100;
+      const y = Math.random() * 100;
+      const duration = (Math.random() * 4 + 2).toFixed(2);
+      const delay    = (Math.random() * 6).toFixed(2);
+      const minOp    = (Math.random() * 0.1 + 0.05).toFixed(2);
+      const maxOp    = (Math.random() * 0.5 + 0.5).toFixed(2);
+      Object.assign(el.style, {
+        left: `${x}%`,
+        top:  `${y}%`,
+        animationDuration:  `${duration}s`,
+        animationDelay:     `-${delay}s`,
+        '--star-min-opacity': minOp,
+        '--star-max-opacity': maxOp,
+      });
+      container.appendChild(el);
+    }
+  });
+
+  // Add 3 shooting stars — start from top-right, travel diagonally left+down
+  for (let i = 0; i < 3; i++) {
+    const s = document.createElement('span');
+    s.className = 'shooting-star';
+    // Spawn from right side of screen, upper portion
+    const sx       = Math.random() * 35 + 60;  // 60% – 95% from left
+    const sy       = Math.random() * 25 + 5;   // 5%  – 30% from top
+    const duration = (Math.random() * 5 + 7).toFixed(1);  // 7–12s cycle
+    const delay    = (Math.random() * 15).toFixed(1);      // staggered start
+    Object.assign(s.style, {
+      left:              `${sx}%`,
+      top:               `${sy}%`,
+      animationDuration: `${duration}s`,
+      animationDelay:    `-${delay}s`,
+    });
+    container.appendChild(s);
+  }
 }
 
 // =====================
@@ -256,6 +394,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Profile entrance animation
   animateProfileIn();
+
+  // Start real-time clock + auto theme
+  setupClock();
+
+  // Generate starfield if dark mode is active on load
+  if (document.documentElement.getAttribute('data-theme') === 'dark') {
+    createStarfield();
+  }
 
   // Setup notifications
   setupLinkTracking();

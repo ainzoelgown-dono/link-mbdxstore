@@ -23,7 +23,7 @@
   <div class="bg-blob blob-2"></div>
   <div class="bg-blob blob-3"></div>
 
-  <!-- Drifting clouds -->
+  <!-- Drifting clouds (light mode only) -->
   <div class="cloud cloud-1"></div>
   <div class="cloud cloud-2"></div>
   <div class="cloud cloud-3"></div>
@@ -31,8 +31,23 @@
   <div class="cloud cloud-5"></div>
   <div class="cloud cloud-6"></div>
 
+  <!-- Starfield (dark mode only) -->
+  <div id="starfield"></div>
+
   <!-- Particle dots -->
   <canvas id="particles"></canvas>
+
+  <!-- Theme indicator + Clock widget -->
+  <div class="theme-controls">
+    <div class="theme-toggle" aria-label="Indikator tema" id="themeToggle">
+      <span class="toggle-icon light-icon">☀️</span>
+      <span class="toggle-icon dark-icon">🌙</span>
+    </div>
+    <div class="clock-widget" id="clockWidget">
+      <span class="clock-time" id="clockTime">--:--</span>
+      <span class="clock-period" id="clockPeriod">---</span>
+    </div>
+  </div>
 
   <main class="container">
 

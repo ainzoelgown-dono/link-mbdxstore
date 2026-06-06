@@ -9,8 +9,8 @@
   padding: 0;
 }
 
+/* ── Light Theme (default) ── */
 :root {
-  /* ── Warna utama dari mbdx.store ── */
   --bg-main: #ddeef8;
   --bg-light: #eaf5fc;
   --bg-card: #ffffff;
@@ -21,19 +21,31 @@
   --accent: #6bbdd9;
   --accent-soft: #cce9f5;
   --accent-dark: #3a9ec4;
-
-  /* ── Text ── */
   --text-primary: #1e2d3a;
   --text-secondary: #4a6276;
   --text-muted: #7a9ab0;
   --text-on-primary: #ffffff;
-
-  /* ── Card & Border ── */
   --card-border: #c5dff0;
   --card-shadow: 0 4px 24px rgba(100, 170, 210, 0.15);
   --card-shadow-hover: 0 10px 40px rgba(100, 170, 210, 0.28);
+  --divider-color: rgba(100, 170, 210, 0.35);
+  --badge-bg: #fde8ec;
+  --badge-border: rgba(232, 96, 122, 0.25);
+  --badge-color: #d44d68;
+  --arrow-bg: #cce9f5;
+  --arrow-border: #c5dff0;
+  --arrow-color: #3a9ec4;
+  --scrollbar-thumb: rgba(232, 96, 122, 0.35);
+  --footer-color: #7a9ab0;
+  --blob-1: #b8dff0;
+  --blob-2: #f4a8b8;
+  --blob-3: #a8d8f0;
+  --body-bg: linear-gradient(170deg, #c8e6f5 0%, #ddeef8 40%, #e8f5fb 70%, #d0eaf7 100%);
+  --toggle-bg: rgba(255,255,255,0.8);
+  --toggle-border: #c5dff0;
+  --toggle-shadow: 0 4px 16px rgba(100,170,210,0.2);
 
-  /* ── Platform colors ── */
+  /* ── Platform colors (tidak berubah antar tema) ── */
   --wa-green: #25d366;
   --wa-dark: #128c7e;
   --fb-blue: #1877f2;
@@ -42,7 +54,7 @@
   --tiktok-dark: #010101;
   --x-dark: #14171a;
 
-  /* ── Misc ── */
+  /* ── Radius & Misc ── */
   --radius-xl: 24px;
   --radius-lg: 18px;
   --radius-md: 14px;
@@ -52,18 +64,63 @@
   --transition-fast: all 0.2s ease;
 }
 
+/* ── Dark Theme ── */
+[data-theme="dark"] {
+  --bg-main: #0a0818;
+  --bg-light: #0f0c24;
+  --bg-card: rgba(255, 255, 255, 0.045);
+  --primary: #a855f7;
+  --primary-dark: #7c3aed;
+  --primary-light: #c084fc;
+  --primary-soft: rgba(124, 58, 237, 0.18);
+  --accent: #06b6d4;
+  --accent-soft: rgba(6, 182, 212, 0.15);
+  --accent-dark: #0891b2;
+  --text-primary: #f0eeff;
+  --text-secondary: #a89fc8;
+  --text-muted: #6b6490;
+  --text-on-primary: #ffffff;
+  --card-border: rgba(255, 255, 255, 0.09);
+  --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --card-shadow-hover: 0 10px 40px rgba(124, 58, 237, 0.2);
+  --divider-color: rgba(255, 255, 255, 0.1);
+  --badge-bg: rgba(124, 58, 237, 0.18);
+  --badge-border: rgba(124, 58, 237, 0.35);
+  --badge-color: #c4b5fd;
+  --arrow-bg: rgba(255,255,255,0.06);
+  --arrow-border: rgba(255,255,255,0.1);
+  --arrow-color: #a89fc8;
+  --scrollbar-thumb: rgba(124, 58, 237, 0.4);
+  --footer-color: #6b6490;
+  --blob-1: #7c3aed;
+  --blob-2: #06b6d4;
+  --blob-3: #a855f7;
+  --body-bg: linear-gradient(170deg, #08061a 0%, #0f0c29 40%, #0d0a22 70%, #08061a 100%);
+  --toggle-bg: rgba(255,255,255,0.07);
+  --toggle-border: rgba(255,255,255,0.12);
+  --toggle-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
   font-family: 'Outfit', sans-serif;
-  background: linear-gradient(170deg, #c8e6f5 0%, #ddeef8 40%, #e8f5fb 70%, #d0eaf7 100%);
+  background: var(--body-bg);
   background-attachment: fixed;
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
+  transition: background 0.5s ease, color 0.4s ease;
+}
+
+/* Smooth transition for all themed elements */
+*, *::before, *::after {
+  transition: background-color 0.4s ease, border-color 0.4s ease,
+              color 0.3s ease, box-shadow 0.4s ease;
 }
 
 /* =====================
@@ -83,7 +140,7 @@ body {
 .blob-1 {
   width: 480px;
   height: 480px;
-  background: radial-gradient(circle, #b8dff0, transparent 70%);
+  background: radial-gradient(circle, var(--blob-1), transparent 70%);
   top: -150px;
   left: -120px;
   animation-delay: 0s;
@@ -92,7 +149,7 @@ body {
 .blob-2 {
   width: 350px;
   height: 350px;
-  background: radial-gradient(circle, #f4a8b8, transparent 70%);
+  background: radial-gradient(circle, var(--blob-2), transparent 70%);
   top: 30%;
   right: -120px;
   animation-delay: -5s;
@@ -101,7 +158,7 @@ body {
 .blob-3 {
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, #a8d8f0, transparent 70%);
+  background: radial-gradient(circle, var(--blob-3), transparent 70%);
   bottom: -80px;
   left: 25%;
   animation-delay: -9s;
@@ -228,6 +285,151 @@ body {
     opacity: 0;
   }
 }
+
+/* Hide clouds in dark mode */
+[data-theme="dark"] .cloud {
+  display: none;
+}
+
+/* =====================
+   Starfield (dark mode)
+   ===================== */
+
+#starfield {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  display: none;
+}
+
+[data-theme="dark"] #starfield {
+  display: block;
+}
+
+/* Star base styles */
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  animation: twinkle linear infinite;
+}
+
+/* Small dim stars */
+.star-sm {
+  width: 1px;
+  height: 1px;
+  opacity: 0.4;
+}
+
+/* Medium stars */
+.star-md {
+  width: 2px;
+  height: 2px;
+  opacity: 0.65;
+}
+
+/* Bright large stars */
+.star-lg {
+  width: 3px;
+  height: 3px;
+  opacity: 0.9;
+  box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.6);
+}
+
+/* Occasional glowing star */
+.star-glow {
+  width: 3px;
+  height: 3px;
+  background: #e8d5ff;
+  box-shadow: 0 0 6px 2px rgba(168, 85, 247, 0.7),
+              0 0 12px 4px rgba(168, 85, 247, 0.3);
+  animation: twinkleGlow linear infinite;
+}
+
+/* Cyan-tinted star */
+.star-cyan {
+  width: 2px;
+  height: 2px;
+  background: #a5f3fc;
+  box-shadow: 0 0 4px 1px rgba(6, 182, 212, 0.6);
+  animation: twinkleCyan linear infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: var(--star-min-opacity, 0.15); transform: scale(1); }
+  50%       { opacity: var(--star-max-opacity, 0.9);  transform: scale(1.3); }
+}
+
+@keyframes twinkleGlow {
+  0%, 100% {
+    opacity: 0.3;
+    box-shadow: 0 0 4px 1px rgba(168, 85, 247, 0.3);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 10px 4px rgba(168, 85, 247, 0.8),
+                0 0 20px 8px rgba(168, 85, 247, 0.3);
+  }
+}
+
+@keyframes twinkleCyan {
+  0%, 100% {
+    opacity: 0.3;
+    box-shadow: 0 0 3px 1px rgba(6, 182, 212, 0.3);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 8px 3px rgba(6, 182, 212, 0.7),
+                0 0 16px 6px rgba(6, 182, 212, 0.3);
+  }
+}
+
+/* Shooting star */
+.shooting-star {
+  position: absolute;
+  width: 150px;
+  height: 1.5px;
+  /* Head (bright) on left, tail fades to right — star travels left+down */
+  background: linear-gradient(to right,
+    rgba(255, 255, 255, 1)   0%,
+    rgba(255, 255, 255, 0.5) 30%,
+    rgba(255, 255, 255, 0.1) 70%,
+    transparent              100%
+  );
+  border-radius: 2px;
+  animation: shootStar linear infinite;
+}
+
+/* Glowing head at the front (left end) */
+.shooting-star::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: white;
+  box-shadow:
+    0 0 4px 2px rgba(255, 255, 255, 0.9),
+    0 0 10px 4px rgba(200, 220, 255, 0.5);
+}
+
+@keyframes shootStar {
+  0% {
+    transform: translate(0px, 0px) rotate(-35deg);
+    opacity: 0;
+  }
+  4%  { opacity: 1; }
+  80% { opacity: 0.9; }
+  100% {
+    transform: translate(-650px, 380px) rotate(-35deg);
+    opacity: 0;
+  }
+}
+
 
 
 /* Particles Canvas */
@@ -367,9 +569,9 @@ body {
 }
 
 .badge {
-  background: var(--primary-soft);
-  border: 1px solid rgba(232, 96, 122, 0.25);
-  color: var(--primary-dark);
+  background: var(--badge-bg);
+  border: 1px solid var(--badge-border);
+  color: var(--badge-color);
   font-size: 0.72rem;
   font-weight: 600;
   padding: 5px 14px;
@@ -404,7 +606,7 @@ body {
   content: '';
   flex: 1;
   height: 1px;
-  background: linear-gradient(to right, transparent, var(--card-border), transparent);
+  background: linear-gradient(to right, transparent, var(--divider-color), transparent);
 }
 
 .section-divider span {
@@ -433,7 +635,6 @@ body {
   color: var(--text-primary);
   overflow: hidden;
   cursor: pointer;
-  transition: var(--transition);
   box-shadow: var(--card-shadow);
   animation: fadeSlideUp 0.6s ease both;
   animation-play-state: paused;
@@ -480,6 +681,19 @@ body {
 .primary-card .link-icon {
   background: linear-gradient(135deg, var(--primary), var(--accent-dark));
   color: white;
+}
+
+/* Primary card — Dark mode overrides */
+[data-theme="dark"] .primary-card {
+  border-color: rgba(168, 85, 247, 0.45);
+  background: rgba(124, 58, 237, 0.12);
+}
+[data-theme="dark"] .primary-card:hover {
+  border-color: rgba(168, 85, 247, 0.65);
+  box-shadow: 0 10px 40px rgba(124, 58, 237, 0.28);
+}
+[data-theme="dark"] .primary-card .card-glow {
+  background: radial-gradient(ellipse at center, rgba(124, 58, 237, 0.2), transparent 70%);
 }
 
 /* WhatsApp Cards */
@@ -622,13 +836,12 @@ body {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--accent-soft);
-  border: 1.5px solid var(--card-border);
+  background: var(--arrow-bg);
+  border: 1.5px solid var(--arrow-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--transition);
-  color: var(--accent-dark);
+  color: var(--arrow-color);
 }
 
 .link-arrow svg {
@@ -654,6 +867,17 @@ body {
   color: white;
 }
 
+/* Primary card arrow — Dark mode */
+[data-theme="dark"] .primary-card .link-arrow {
+  background: rgba(124, 58, 237, 0.2);
+  border-color: rgba(168, 85, 247, 0.35);
+  color: var(--primary-light);
+}
+[data-theme="dark"] .primary-card:hover .link-arrow {
+  background: var(--primary);
+  color: white;
+}
+
 /* =====================
    Footer
    ===================== */
@@ -670,7 +894,7 @@ body {
 
 .footer-text {
   font-size: 0.82rem;
-  color: var(--text-muted);
+  color: var(--footer-color);
   font-weight: 400;
 }
 
@@ -681,7 +905,7 @@ body {
 
 .footer-sub {
   font-size: 0.76rem;
-  color: var(--text-muted);
+  color: var(--footer-color);
   opacity: 0.75;
 }
 
@@ -722,9 +946,121 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(232, 96, 122, 0.35);
+  background: var(--scrollbar-thumb);
   border-radius: 3px;
 }
+
+/* =====================
+   Theme Toggle Button
+   ===================== */
+
+/* =====================
+   Theme Controls
+   ===================== */
+
+.theme-controls {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+/* Decorative icon — no interaction */
+.theme-toggle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid var(--toggle-border);
+  background: var(--toggle-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--toggle-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.toggle-icon {
+  position: absolute;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Light mode: sun visible */
+.light-icon { opacity: 1; transform: rotate(0deg) scale(1); }
+.dark-icon  { opacity: 0; transform: rotate(90deg) scale(0.5); }
+
+/* Dark mode: moon visible */
+[data-theme="dark"] .light-icon { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+[data-theme="dark"] .dark-icon  { opacity: 1; transform: rotate(0deg) scale(1); }
+
+/* =====================
+   Clock Widget
+   ===================== */
+
+.clock-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  background: var(--toggle-bg);
+  border: 1.5px solid var(--toggle-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--toggle-shadow);
+  border-radius: 12px;
+  padding: 5px 10px;
+  min-width: 56px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.clock-time {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+/* Blinking colon separator */
+.clock-time .colon {
+  animation: blinkColon 1s step-end infinite;
+  display: inline-block;
+}
+
+@keyframes blinkColon {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.15; }
+}
+
+.clock-period {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.52rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1;
+  margin-top: 1px;
+}
+
+/* Period accent color by time of day */
+.clock-period.pagi   { color: #f59e0b; }
+.clock-period.siang  { color: var(--primary); }
+.clock-period.sore   { color: #f97316; }
+.clock-period.malam  { color: #818cf8; }
+.clock-period.dinihari { color: #64748b; }
+
+
 
 /* =====================
    Responsive
