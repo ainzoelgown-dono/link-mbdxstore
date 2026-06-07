@@ -372,6 +372,99 @@ function setupLinkTracking() {
 }
 
 // =====================
+// Background Music
+// =====================
+
+function setupMusic() {
+  const audio    = document.getElementById('bgMusic');
+  const btn      = document.getElementById('musicBtn');
+  const overlay  = document.getElementById('welcomeOverlay');
+  const closeBtn = document.getElementById('welcomeClose');
+  const ctaBtn   = document.getElementById('welcomeCta');
+  if (!audio || !btn) return;
+
+  let unmuted = false;
+
+  // Fade volume 0 → 0.5
+  function fadeInVolume() {
+    audio.volume = 0;
+    let vol = 0;
+    const fade = setInterval(() => {
+      vol = Math.min(vol + 0.03, 0.5);
+      audio.volume = vol;
+      if (vol >= 0.5) clearInterval(fade);
+    }, 50);
+  }
+
+  function dismissModal() {
+    if (!overlay) return;
+    overlay.classList.add('hide');
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      overlay.classList.remove('show', 'hide');
+    }, 450);
+  }
+
+  function startMusic() {
+    if (unmuted) return;
+    unmuted = true;
+    audio.muted = true;
+    audio.volume = 0;
+    audio.play().then(() => {
+      audio.muted = false;
+      fadeInVolume();
+      btn.classList.remove('waiting');
+      btn.classList.add('playing');
+    }).catch(() => {});
+    dismissModal();
+  }
+
+  // Show welcome modal after short delay
+  if (overlay) {
+    setTimeout(() => {
+      overlay.classList.add('show');
+    }, 600);
+  }
+
+  // Close via [x] or CTA → start music
+  if (closeBtn) closeBtn.addEventListener('click', startMusic);
+  if (ctaBtn)   ctaBtn.addEventListener('click', startMusic);
+
+  // Also try silent autoplay in background (bonus: might work directly)
+  audio.muted = true;
+  audio.volume = 0;
+  audio.play().then(() => {
+    // Muted autoplay succeeded → unmute immediately
+    audio.muted = false;
+    fadeInVolume();
+    btn.classList.add('playing');
+    unmuted = true;
+    // Modal still shows as greeting, dismiss on close
+  }).catch(() => {
+    btn.classList.add('waiting');
+  });
+
+  // Music btn toggle (after modal closed)
+  btn.addEventListener('click', () => {
+    if (!unmuted) { startMusic(); return; }
+    if (!audio.muted) {
+      audio.muted = true;
+      btn.classList.remove('playing');
+      btn.classList.add('waiting');
+      showToast('🔇 Musik dimatikan');
+    } else {
+      audio.muted = false;
+      fadeInVolume();
+      btn.classList.remove('waiting');
+      btn.classList.add('playing');
+      showToast('🎵 Musik dinyalakan');
+    }
+  });
+}
+
+
+
+// =====================
 // Init
 // =====================
 
@@ -402,6 +495,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.documentElement.getAttribute('data-theme') === 'dark') {
     createStarfield();
   }
+
+  // Setup background music
+  setupMusic();
 
   // Setup notifications
   setupLinkTracking();

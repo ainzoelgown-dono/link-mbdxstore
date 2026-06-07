@@ -1063,7 +1063,277 @@ body {
 
 
 /* =====================
+   Music Control Button
+   ===================== */
+
+.music-btn {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 100;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid var(--toggle-border);
+  background: var(--toggle-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--toggle-shadow);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.3s ease;
+}
+
+.music-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+}
+
+.music-btn:active {
+  transform: scale(0.92);
+}
+
+/* Icon visibility states */
+.music-icon-on,
+.music-icon-off {
+  position: absolute;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Default: music OFF (waiting for interaction) */
+.music-btn .music-icon-on { opacity: 0; transform: scale(0.5); }
+.music-btn .music-icon-off { opacity: 1; transform: scale(1); }
+
+/* Music PLAYING state */
+.music-btn.playing .music-icon-on { opacity: 1; transform: scale(1); }
+.music-btn.playing .music-icon-off { opacity: 0; transform: scale(0.5); }
+
+/* Pulse ring when playing */
+.music-btn.playing {
+  animation: musicPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes musicPulse {
+  0%, 100% { box-shadow: var(--toggle-shadow), 0 0 0 0 rgba(232, 96, 122, 0.35); }
+  50%       { box-shadow: var(--toggle-shadow), 0 0 0 8px rgba(232, 96, 122, 0); }
+}
+
+[data-theme="dark"] .music-btn.playing {
+  animation: musicPulseDark 2.5s ease-in-out infinite;
+}
+
+@keyframes musicPulseDark {
+  0%, 100% { box-shadow: var(--toggle-shadow), 0 0 0 0 rgba(168, 85, 247, 0.4); }
+  50%       { box-shadow: var(--toggle-shadow), 0 0 0 8px rgba(168, 85, 247, 0); }
+}
+
+/* Waiting-for-interaction: gentle bounce hint */
+.music-btn.waiting {
+  animation: musicWait 1.8s ease-in-out infinite;
+}
+
+@keyframes musicWait {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.08); }
+}
+
+/* Ripple element */
+.music-ripple {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* =====================
+   Welcome Modal
+   ===================== */
+
+.welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.welcome-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.welcome-overlay.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.welcome-modal {
+  position: relative;
+  background: var(--bg-card);
+  border: 1.5px solid var(--card-border);
+  border-radius: 28px;
+  padding: 40px 36px 32px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18),
+              0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: scale(0.88) translateY(20px);
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.4s ease;
+  opacity: 0;
+}
+
+.welcome-overlay.show .welcome-modal {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.welcome-overlay.hide .welcome-modal {
+  transform: scale(0.92) translateY(12px);
+  opacity: 0;
+}
+
+/* Close button */
+.welcome-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--card-border);
+  background: var(--arrow-bg);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+
+.welcome-close:hover {
+  background: var(--primary-soft);
+  color: var(--primary);
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* Animated music icon */
+.welcome-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  display: inline-block;
+  animation: floatIcon 2.5s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50%       { transform: translateY(-8px) rotate(5deg); }
+}
+
+/* Text content */
+.welcome-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.welcome-brand {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--accent-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 6px;
+  letter-spacing: 0.5px;
+}
+
+.welcome-desc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+.welcome-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--divider-color), transparent);
+  margin: 20px 0;
+}
+
+.welcome-music-note {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin: 0 0 24px;
+  font-weight: 500;
+}
+
+/* CTA Button */
+.welcome-cta {
+  width: 100%;
+  padding: 14px 24px;
+  border-radius: 100px;
+  border: none;
+  background: linear-gradient(135deg, var(--primary), var(--accent-dark));
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(232, 96, 122, 0.35);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.25s ease;
+}
+
+.welcome-cta:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 28px rgba(232, 96, 122, 0.45);
+}
+
+.welcome-cta:active {
+  transform: scale(0.97);
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .welcome-modal {
+  background: rgba(15, 12, 36, 0.92);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5),
+              0 0 0 1px rgba(168, 85, 247, 0.1);
+}
+
+[data-theme="dark"] .welcome-cta {
+  background: linear-gradient(135deg, var(--primary), var(--accent-dark));
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+}
+
+[data-theme="dark"] .welcome-cta:hover {
+  box-shadow: 0 10px 28px rgba(124, 58, 237, 0.55);
+}
+
+/* =====================
    Responsive
+
    ===================== */
 
 @media (max-width: 480px) {
