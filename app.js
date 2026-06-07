@@ -426,9 +426,19 @@ function setupMusic() {
     }, 600);
   }
 
-  // Close via [x] or CTA → start music
-  if (closeBtn) closeBtn.addEventListener('click', startMusic);
-  if (ctaBtn)   ctaBtn.addEventListener('click', startMusic);
+  // Close via [x] atau CTA → start music
+  // Tambah touchend untuk kompatibilitas iOS Safari
+  function addTapListener(el, handler) {
+    if (!el) return;
+    el.addEventListener('click', handler);
+    el.addEventListener('touchend', (e) => {
+      e.preventDefault(); // Cegah double-fire di iOS
+      handler();
+    });
+  }
+
+  addTapListener(closeBtn, startMusic);
+  addTapListener(ctaBtn, startMusic);
 
   // Also try silent autoplay in background (bonus: might work directly)
   audio.muted = true;
