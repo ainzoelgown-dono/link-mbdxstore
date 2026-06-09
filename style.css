@@ -774,6 +774,19 @@ body {
   color: white;
 }
 
+/* Discord Card */
+.discord-card:hover {
+  box-shadow: 0 10px 40px rgba(88, 101, 242, 0.22);
+  border-color: rgba(88, 101, 242, 0.35);
+}
+.discord-card .card-glow {
+  background: linear-gradient(to right, #5865f2, #7289da);
+}
+.discord-card .link-icon {
+  background: linear-gradient(135deg, #5865f2, #7289da);
+  color: white;
+}
+
 /* =====================
    Link Icon
    ===================== */
